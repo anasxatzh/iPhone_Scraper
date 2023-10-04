@@ -166,7 +166,7 @@ class ScrapeInsomnia(object):
             # print([images[i]["src"] for i in range(len(images))])
             # print(insomnia_posts)
 
-            for post_idx, post in enumerate(insomnia_posts):
+            for post in insomnia_posts:
                 links = post.find_all("")
 
                 self.date = post.find("p",
