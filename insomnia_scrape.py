@@ -152,7 +152,7 @@ class ScrapeInsomnia(object):
     def main(self) -> None:
         for _url in [r"https://www.insomnia.gr/classifieds/search/?&q=iphone&type=classifieds_advert&page=" + str(k) + "&sortby=relevancy" for k in range(1,
                                                                                                                                                           self.num_pages_to_scrape+1)]:
-            print(f"\nPAGE NUMBER {_url.split('page=')[1][0]}:")
+            print(f"\nPAGE NUMBER {_url.split('page=')[1].split('&')[0]}:")
 
             page = requests.get(_url)
             soup = bs(page.content, "html.parser")
