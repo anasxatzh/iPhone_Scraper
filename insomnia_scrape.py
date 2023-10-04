@@ -55,17 +55,19 @@ class ScrapeInsomnia(object):
                  keep_titles : list = [],
                  filtered_prices : list = [],
                  filtered_titles : list = [],
+                 final_titles : list = [],
+                 final_prices : list = [],
                  final_result : dict = dict(),
                  ) -> None:
-
 
         self.all_iphone_models,self.num_pages_to_scrape, self.num_page, self.remove_str, self.id_to_find, self.class_to_find, \
             self.sort_by_date,self.sort_by_phone,self.current_date, self.price_class, self.date_class, \
                 self.type_of_product_class, self.description_class, self.title_class, self.keep_prices, \
-                    self.keep_titles, self.filtered_prices, self.filtered_titles, self.final_result= \
+                    self.keep_titles, self.filtered_prices, self.filtered_titles, self.final_titles, self.final_prices, self.final_result= \
                     all_iphone_models, num_pages_to_scrape, num_page, remove_str, id_to_find, class_to_find, \
                         sort_by_date, sort_by_phone, current_date, price_class, date_class, type_of_product_class, \
-                            description_class, title_class, keep_prices, keep_titles, filtered_prices, filtered_titles, final_result
+                            description_class, title_class, keep_prices, keep_titles, filtered_prices, filtered_titles, \
+                                final_titles, final_prices, final_result
 
 
         self.compare_date, self.date_filter = None, None
@@ -194,7 +196,7 @@ class ScrapeInsomnia(object):
                         self.keep_prices.append("".join([k for k in price.text if price is not None and k.isdigit()]))
                         self.keep_prices = [float(k) for k in self.keep_prices]
 
-                        final_prices, final_titles = self.keep_prices, self.keep_titles
+                        self.final_prices, self.final_titles = self.keep_prices, self.keep_titles
 
                         if self.max_budget is not None:
                             for title, price in zip(self.keep_titles,
@@ -202,27 +204,34 @@ class ScrapeInsomnia(object):
                                 if price <= self.max_budget:
                                     self.filtered_prices.append(price)
                                     self.filtered_titles.append(title)
-                                    final_prices, final_titles = self.filtered_prices, self.filtered_titles
-                                else:final_prices, final_titles = [],[]
+                                    self.final_prices, self.final_titles = self.filtered_prices, self.filtered_titles
+                                else:self.final_prices, self.final_titles = [],[]
                         else:pass
 
-                        self.final_result = {key : str(value) + " €" for key,value in zip(final_titles,
-                                                                                          final_prices)}
+                        self.final_result = {key : str(value) + " €" for key,value in zip(self.final_titles,
+                                                                                          self.final_prices)}
                     else:pass
                 else:pass
 
 
+            self.get_everyPage_result()
+        self.get_overall_result()
 
-            self.get_result()
 
 
-    def get_result(self):
+    def get_everyPage_result(self):
         r"""
-        Prints the items found as a dictionary, with the title of the post as key and the price of it as a value.
+        Prints a dictionary, with the title of the post as key and the price of it as a value (For every page scraped).
         """
         print(f"ITEMS FOUND: {self.final_result if self.final_result else None}")
 
 
+    def get_overall_result(self):
+        if self.final_result:
+            most_worthy_phone : dict = {k[0] : k[1] for k in self.final_result.items() 
+                                        if float(k[1].split(" €")[0]) == min(float(val.split(" €")[0]) for val in self.final_result.values())}
+            print("\nOverall...")
+            print(f"The matching iPhones with the lowest price are: {most_worthy_phone}")
 
 
 
