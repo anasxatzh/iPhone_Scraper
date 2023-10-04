@@ -9,7 +9,7 @@ from PIL import Image
 from urllib.parse import urljoin
 
 
-number_of_pages_to_scrape = 5
+number_of_pages_to_scrape = 15
 
 sort_date = True # choose whether to sort items by date
 sort_date_type = "NEWEST" # choose between "NEWEST" and "OLDEST" date items to show
@@ -19,7 +19,7 @@ sort_phone = True # choose whether to sort items by phone model
 iphone_model : str = "iPhone xs" # iPhone model
 iphone_capacity : str = "64" # in GB
 
-maximum_budget : float = 590 # in euros
+maximum_budget : float = 5900 # in euros
 
 
 
@@ -122,14 +122,15 @@ class ScrapeInsomnia(object):
 
 
 
-
+# input_phone.split(" ")[1]
     def checkIphone(self) -> bool:
 
         input_phone : str = self.iph_model.lower()
         input_phone_type : str = input_phone.split(" ")[0]
         input_phone_number : str = "".join([k for k in input_phone if k.isdigit()]) # GET THE IPHONE NUMBER
-        input_phone_details : str = input_phone.split(input_phone_number)[1] if input_phone_number else input_phone.split(" ")[1]
+        input_phone_details : str = input_phone.split(input_phone_number)[1] if input_phone_number else " ".join(input_phone.split(" ")[1:])
         input_phone_title : str = input_phone_type + " " + input_phone_number + input_phone_details
+
 
 
         iphone_name_condition = input_phone_title in self.title.lower()
