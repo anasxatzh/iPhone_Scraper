@@ -22,7 +22,6 @@ iphone_capacity : str = "64" # in GB
 maximum_budget : float = 5900 # in euros
 
 
-
 class ScrapeInsomnia(object):
 
     def __init__(self,
